@@ -56,14 +56,18 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
-        RateLimiter::for('login', function (Request $request) {
+        RateLimiter::for('login', function () {
             return Limit::perMinutes(5, 5)->response(function(){
-                return response('You are locked. Wait for 5 minutes');
+                return response()->json(['message'=>'You are locked. Wait 5 minutes'], 401); 
             });
         });
         
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        });
+
+        RateLimiter::for('none', function () {
+            return Limit::none();
         });
     }
 }

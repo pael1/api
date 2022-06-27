@@ -28,6 +28,10 @@ class Email extends Mailable
      */
     public function build()
     {
-        return $this->view('welcome');
+        return $this
+        ->from('project@gmail.com')
+        ->to('rafaelfernandez677@gmail.com')
+        ->subject('email test')
+        ->view('welcome');
     }
 }
