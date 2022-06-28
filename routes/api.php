@@ -26,6 +26,7 @@ Route::post('/auth/register', [Authcontroller::class, 'register']);
 // Route::post('register', 'API\UserController@register');
 
 Route::group(['namespace' => 'Api'], function() {
+    // Route::post('login', [UserController::class, 'login'])->middleware('throttle:login');
     Route::post('login', [UserController::class, 'login']);
     Route::post('register', [UserController::class, 'register']);
 

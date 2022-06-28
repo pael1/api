@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use App\Notifications\emailsent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
+    
 
     public function register(Request $request)
     {
@@ -39,8 +41,33 @@ class UserController extends Controller
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
             $success['token'] =  $user->createToken('name')->accessToken;
+            Cache::forget('key');
             return response()->json(['access_token' => $success], 201);
+            
         } else {
+            $locked = Cache::get('locked');
+            Cache::increment('key', 1);
+            
+            $value = Cache::get('key');
+
+            if (isset($locked)) {
+                Cache::put('key', 0);
+                // return response()->json(['message' => 'You are locked. Wait 5 minutes',
+                // 'EXPIRY'=>now()->addMinutes(1), 'LOCKED'=> $locked, 'value'=> $value], 401);
+                return response()->json(['message' => 'You are locked. Wait 5 minutes'], 401);
+                $value = 1;
+            }
+
+            if($value > 5 || isset($locked)){
+               
+                //$datetimelocked = now()->addMinute(1);
+                if (!isset($locked)) {
+                    Cache::add('locked', 1, now()->addMinutes(5));
+                }
+                // return response()->json(['message' => 'You are locked. Wait 5 minutes',
+                // 'EXPIRY'=>now()->addMinutes(1), 'LOCKED'=> $locked, 'value'=> $value], 401);
+                return response()->json(['message' => 'You are locked. Wait 5 minutes'], 401);
+            }
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
     }

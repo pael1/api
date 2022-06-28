@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class Authcontroller extends Controller
-{
+{   
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'email'=>'required|email|unique:users',
@@ -28,7 +28,7 @@ class Authcontroller extends Controller
             'email'=>$request->email,
             'password'=>Hash::make($request->password)
         ]);
-
+        
         return response()->json([
             'message'=>'registration successful',
             'data'=>$user
