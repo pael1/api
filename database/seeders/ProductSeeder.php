@@ -18,7 +18,8 @@ class ProductSeeder extends Seeder
         for ($i=0; $i < 10; $i++) { 
             DB::table('Products')->insert([
                 'name'=>Str::random(10),
-                'available Stock'=>rand(2,50)
+                'available Stock'=>rand(2,50),
+                'stock'=>rand(2,50)
             ]);
         }
     }

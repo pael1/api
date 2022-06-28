@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // \Illuminate\Support\Facades\Mail::send(new \App\Mail\Email());
-    // \Illuminate\Support\Facades\Notification::send(\App\Models\User::all(), new \App\Notifications\emailsent());
+    \Illuminate\Support\Facades\Notification::send(\App\Models\User::all(), new \App\Notifications\emailsent());
     return view('welcome');
 });
 

@@ -28,7 +28,12 @@ Route::post('/auth/register', [Authcontroller::class, 'register']);
 Route::group(['namespace' => 'Api'], function() {
     Route::post('login', [UserController::class, 'login']);
     Route::post('register', [UserController::class, 'register']);
-    Route::post('order', [UserController::class, 'placeOrder']);
+
+    Route::group(['middleware' => 'auth:api'], function()
+    {
+        Route::post('order', [UserController::class, 'placeOrder']);
+    });
+
 
     // Route::group(['middleware' => 'auth:api'], function(){
     //     Route::post('details', [UserController::class, 'details']);
